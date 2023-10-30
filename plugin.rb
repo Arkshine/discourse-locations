@@ -84,17 +84,17 @@ after_initialize do
   Topic.register_custom_field_type('has_geo_location', :boolean)
   add_to_class(:topic, :location) { self.custom_fields['location'] }
 
-  add_to_serializer(:topic_view, :location, false) { object.topic.location }
+  add_to_serializer(:topic_view, :location, respect_plugin_enabled: false) { object.topic.location }
   add_to_serializer(:topic_view, :include_location?) { object.topic.location.present? }
 
   TopicList.preloaded_custom_fields << 'location' if TopicList.respond_to? :preloaded_custom_fields
-  add_to_serializer(:topic_list_item, :location, false) { object.location }
+  add_to_serializer(:topic_list_item, :location, respect_plugin_enabled: false) { object.location }
   add_to_serializer(:topic_list_item, :include_location?) { object.location.present? }
 
   User.register_custom_field_type('geo_location', :json)
   register_editable_user_custom_field [:geo_location,  geo_location: {}] if defined? register_editable_user_custom_field
-  add_to_serializer(:user, :geo_location, false) { object.custom_fields['geo_location'] }
-  add_to_serializer(:user_card, :geo_location, false) { object.custom_fields['geo_location'] }
+  add_to_serializer(:user, :geo_location, respect_plugin_enabled: false) { object.custom_fields['geo_location'] }
+  add_to_serializer(:user_card, :geo_location, respect_plugin_enabled: false) { object.custom_fields['geo_location'] }
   add_to_serializer(:user_card, :include_geo_location?) do
     object.custom_fields['geo_location'].present? &&
     object.custom_fields['geo_location'] != "{}"
@@ -220,7 +220,7 @@ after_initialize do
     @country_codes ||= Locations::Country.codes
   end
 
-  add_to_serializer(:site, :country_codes, false) { object.country_codes }
+  add_to_serializer(:site, :country_codes, respect_plugin_enabled: false) { object.country_codes }
 
   require_dependency 'topic_query'
   class ::TopicQuery
